@@ -23,7 +23,8 @@ def handle_client(client_socket, addr):
         client_socket.close()
 
 # Função do servidor principal
-def server(host='localhost', port=5000):
+def server(port=5000):
+    host = get_local_ip()
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
     server_socket.listen(5)
@@ -48,7 +49,7 @@ def heartbeat_sender(interval=5):
                 conn.close()
 
 # Função para atuar como cliente (só para teste)
-def client(target_host='localhost', target_port=5000):
+def client(target_host, target_port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.connect((target_host, target_port))
         threading.Thread(target=receive_messages, args=(sock,), daemon=True).start()
@@ -67,6 +68,18 @@ def receive_messages(sock):
                 print(f"[Cliente] Recebido: {data.decode().strip()}")
         except:
             break
+
+def get_local_ip():
+    try:
+        # Cria um socket UDP só para descobrir o IP (não envia nada)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  # 8.8.8.8 é só para descobrir a rota de saída
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception as e:
+        print(f"Erro ao obter IP: {e}")
+        return "127.0.0.1"
 
 # Inicialização
 if __name__ == "__main__":
