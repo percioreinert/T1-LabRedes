@@ -15,7 +15,7 @@ class Interface(cmd.Cmd):
         name, filename = map(str, arg.split())
         print(f"Sending file {filename} to {name}.")
 
-    def do_sair(self, arg):
+    def do_leave(self, arg):
         print("Bye!")
         return True
 
