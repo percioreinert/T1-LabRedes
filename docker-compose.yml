@@ -1,0 +1,34 @@
+services:
+  node1:
+    build: .
+    environment:
+      NODE_NAME: node1
+    networks:
+      - cluster
+
+  node2:
+    build: .
+    environment:
+      NODE_NAME: node2
+    networks:
+      - cluster
+
+  node3:
+    build: .
+    environment:
+      NODE_NAME: node3
+    networks:
+      - cluster
+
+  interface:
+    build: .
+    container_name: interface
+    command: python Interface.py
+    stdin_open: true
+    tty: true
+    networks:
+      - cluster
+
+networks:
+  cluster:
+    driver: bridge
